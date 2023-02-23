@@ -5,8 +5,8 @@ export const NavBar = () => {
     const navigate = useNavigate()
     return (
         <ul className="navbar">
-            <li className="navbar__item">
-                Navigation link
+            <li className="navbar__item active">
+                <Link className="navbar__link" to="/events">Events</Link>
             </li>
             <li className="navbar__item">
                 Navigation link
