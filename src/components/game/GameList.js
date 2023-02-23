@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { getGames } from "../../managers/GameManager.js"
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const GameList = (props) => {
     const [ games, setGames ] = useState([])
@@ -23,6 +23,9 @@ export const GameList = (props) => {
                         <div className="game__title">{game.name} by {game.creator}</div>
                         <div className="game__players">{game.number_of_players} players needed</div>
                         <div className="game__skillLevel">Skill level is {game.skill_level}</div>
+                        <div>
+                            <Link className="edit-game" to={`/games/${game.id}`}>EDIT GAME</Link> 
+                        </div>
                     </section>
                 })
             }

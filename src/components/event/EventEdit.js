@@ -1,33 +1,37 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
-import { getGames } from '../../managers/GameManager.js'
-import { createEvent } from '../../managers/EventManager.js'
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { getGames } from "../../managers/GameManager.js"
+import { updateEvent, getEvent } from '../../managers/EventManager.js'
 
-export const EventForm = () => {
+export const EventEdit = () => {
     const navigate = useNavigate()
+    const {eventId} = useParams()
     const [games, setGames] = useState([])
-
-    /*
-        Since the input fields are bound to the values of
-        the properties of this state variable, you need to
-        provide some default values.
-    */
-    const [currentEvent, setCurrentEvent] = useState({
+    const [event, setUpdateEvent] = useState({
         description: "",
         datetime: "",
         title: "",
         game: 0
     })
 
-    // TODO: Get the game types, then set the state
+    useEffect(() => {
+        getEvent(eventId)
+        .then((data) => {
+            const singleEvent = data
+            setUpdateEvent(singleEvent)
+        })
+        }, 
+        [eventId]
+    )
+
     useEffect(() => {
         getGames().then(data => setGames(data))
     }, [])
 
 
     return (
-        <form className="eventForm">
-            <h2 className="eventForm__title">Create New Event</h2>
+        <form className="gameForm">
+            <h2 className="gameForm__title">Edit Event</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title Of Event: </label>
@@ -35,11 +39,12 @@ export const EventForm = () => {
                         required
                         type="text"
                         className="form-control"
+                        value={event.title}
                         onChange={
                             (evt) => {
-                                const copy = {...currentEvent}
+                                const copy = {...event}
                                 copy.title = evt.target.value
-                                setCurrentEvent(copy)
+                                setUpdateEvent(copy)
                             }
                         } />
                 </div>
@@ -52,11 +57,12 @@ export const EventForm = () => {
                         required
                         type="text"
                         className="form-control"
+                        value={event.description}
                         onChange={
                             (evt) => {
-                                const copy = {...currentEvent}
+                                const copy = {...event}
                                 copy.description = evt.target.value
-                                setCurrentEvent(copy)
+                                setUpdateEvent(copy)
                             }
                         } />
                 </div>
@@ -70,11 +76,12 @@ export const EventForm = () => {
                         type="text"
                         className="form-control"
                         placeholder="eg. March 2nd at 7p"
+                        value={event.datetime}
                         onChange={
                             (evt) => {
-                                const copy = {...currentEvent}
+                                const copy = {...event}
                                 copy.datetime = evt.target.value
-                                setCurrentEvent(copy)
+                                setUpdateEvent(copy)
                             }
                         } />
                 </div>
@@ -83,10 +90,12 @@ export const EventForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="game-dropdown">Games</label>
-                    <select onChange={(evt) => {
-                        const copy= {...currentEvent}
+                    <select
+                    value={event.game}
+                    onChange={(evt) => {
+                        const copy= {...event}
                             copy.game = parseInt(evt.target.value) 
-                            setCurrentEvent(copy)}}>
+                            setUpdateEvent(copy)}}>
                     <option value={0} type="select" className="form-dropdown" required>Select Game</option>
                     {
                         games.map(
@@ -99,25 +108,25 @@ export const EventForm = () => {
                 </div>
             </fieldset>
 
-            {/* TODO: create the rest of the input fields */}
-
             <button type="submit"
                 onClick={evt => {
                     // Prevent form from being submitted
                     evt.preventDefault()
 
-                    const event = {
-                        description: currentEvent.description,
-                        title: currentEvent.title,
-                        datetime: currentEvent.datetime,
-                        game: parseInt(currentEvent.game)
+                    const event1 = {
+                        description: event.description,
+                        title: event.title,
+                        datetime: event.datetime,
+                        game: parseInt(event.game)
                     }
 
                     // Send POST request to your API
-                    createEvent(event)
+                    updateEvent(event1, eventId)
                         .then(() => navigate("/events"))
                 }}
-                className="btn btn-primary">Create</button>
-        </form>
+                className="btn btn-primary">Submit</button>
+
+
+            </form>
     )
-}
+}     
