@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { getEvents } from "../../managers/EventManager.js"
+import { deleteEvent, getEvents } from "../../managers/EventManager.js"
 import { Link, useNavigate } from 'react-router-dom'
 
 export const EventList = (props) => {
@@ -27,6 +27,10 @@ export const EventList = (props) => {
                         <div>
                             <Link className="edit-event" to={`/events/${event.id}`}>EDIT EVENT</Link> 
                         </div>
+                        <button onClick={() => {
+                            deleteEvent(event.id)
+                            .then(window.location.reload(false))
+                        }}>Delete</button>
                     </section>
                 })
             }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { getGames } from "../../managers/GameManager.js"
+import { deleteGame, getGames } from "../../managers/GameManager.js"
 import { Link, useNavigate } from 'react-router-dom'
 
 export const GameList = (props) => {
@@ -26,6 +26,10 @@ export const GameList = (props) => {
                         <div>
                             <Link className="edit-game" to={`/games/${game.id}`}>EDIT GAME</Link> 
                         </div>
+                        <button onClick={() => {
+                            deleteGame(game.id)
+                            .then(window.location.reload(false))
+                        }}>Delete</button>
                     </section>
                 })
             }
