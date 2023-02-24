@@ -91,10 +91,10 @@ export const EventEdit = () => {
                 <div className="form-group">
                     <label htmlFor="game-dropdown">Games</label>
                     <select
-                    value={event.game}
+                    value={event.game.id}
                     onChange={(evt) => {
                         const copy= {...event}
-                            copy.game = parseInt(evt.target.value) 
+                            copy.game.id = parseInt(evt.target.value) 
                             setUpdateEvent(copy)}}>
                     <option value={0} type="select" className="form-dropdown" required>Select Game</option>
                     {
@@ -117,7 +117,7 @@ export const EventEdit = () => {
                         description: event.description,
                         title: event.title,
                         datetime: event.datetime,
-                        game: parseInt(event.game)
+                        game: parseInt(event.game.id)
                     }
 
                     // Send POST request to your API

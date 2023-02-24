@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { deleteEvent, getEvents } from "../../managers/EventManager.js"
+import { deleteEvent, getEvents, leaveEvent, joinEvent } from "../../managers/EventManager.js"
 import { Link, useNavigate } from 'react-router-dom'
 
 export const EventList = (props) => {
@@ -27,10 +27,35 @@ export const EventList = (props) => {
                         <div>
                             <Link className="edit-event" to={`/events/${event.id}`}>EDIT EVENT</Link> 
                         </div>
-                        <button onClick={() => {
+                        <button className="delete-btn" 
+                        onClick={() => {
                             deleteEvent(event.id)
-                            .then(window.location.reload(false))
+                            .then(() => {
+                                getEvents().then(data => setEvents(data))
+                            })
                         }}>Delete</button>
+                        
+                        {
+                            event.joined ?
+                            // TODO: create the Leave button\
+                            <button className="delete-btn" 
+                            onClick={() => {
+                                leaveEvent(event.id)
+                                .then(() => {
+                                    getEvents().then(data => setEvents(data))
+                                })
+                                }}>Leave</button>
+                            :
+                            // TODO: create the Join button
+                            <button className="delete-btn" 
+                            onClick={() => {
+                                joinEvent(event.id)
+                                .then(() => {
+                                    getEvents().then(data => setEvents(data))
+                                }) 
+                                }}>Join</button>
+                        }
+                    
                     </section>
                 })
             }
